@@ -1,7 +1,5 @@
 """HTTP session management for IPTorrents — cookie-based auth."""
 
-from __future__ import annotations
-
 import sys
 
 import requests

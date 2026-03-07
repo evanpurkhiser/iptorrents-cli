@@ -1,27 +1,29 @@
 """Search IPTorrents and parse results."""
 
-from __future__ import annotations
-
 import re
 import sys
 from dataclasses import dataclass
+
 import requests
 from bs4 import BeautifulSoup
 
 from .session import BASE_URL
 from .utils import parse_int
 
+# Maps user-facing sort names to IPTorrents URL parameter values.
+# Note: "name" cannot be a StrEnum member (conflicts with Enum.name descriptor),
+# so this stays a plain dict.
 SORT_FIELDS: dict[str, str] = {
     "seeders": "seeders",
     "leechers": "leechers",
     "size": "size",
-    "downloads": "completed",
+    "downloads": "completed",  # IPTorrents internal name
     "name": "name",
     "age": "age",
 }
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class Torrent:
     id: int
     name: str
@@ -85,7 +87,7 @@ def _parse_results(html: str, limit: int) -> list[Torrent]:
     if table is None:
         if "sign in" in html.lower():
             print(
-                "Error: not logged in — update cookies in ~/.config/iptorrents/config.toml",
+                "Error: not logged in — run `ipt auth` to save credentials.",
                 file=sys.stderr,
             )
             sys.exit(1)

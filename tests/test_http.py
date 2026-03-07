@@ -93,7 +93,7 @@ class TestFetchInfo:
         assert info.id == 111222
         assert "Blade Runner" in info.name
         assert info.seeders == 987
-        assert info.genre == ["Sci-Fi", "Drama"]
+        assert info.genre == ("Sci-Fi", "Drama")
         assert "imdb.com" in info.imdb_url
 
     @rsps_lib.activate
@@ -102,7 +102,7 @@ class TestFetchInfo:
         rsps_lib.add(rsps_lib.GET, f"{BASE_URL}/t/333444", body=INFO_HTML_SOFTWARE, status=200)
         info = fetch_info(session, 333444)
         assert info.id == 333444
-        assert info.genre == []
+        assert info.genre == ()
         assert info.plot == ""
         assert info.imdb_url == ""
 

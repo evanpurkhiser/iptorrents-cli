@@ -10,10 +10,10 @@ Example auth file (written by `ipt auth` or by hand):
     cf_clearance = "abc..."   # optional but usually required
 """
 
-import stat
 import sys
 import tomllib
 from pathlib import Path
+from typing import Any
 
 STATE_DIR = Path.home() / ".local" / "state" / "iptorrents-cli"
 AUTH_FILE = STATE_DIR / "auth.toml"
@@ -36,7 +36,7 @@ def _check_file_permissions(path: Path) -> None:
         )
 
 
-def get_config() -> dict:
+def get_config() -> dict[str, Any]:
     """Load and return the auth file as a dict. Exits with an error if missing."""
     if not AUTH_FILE.exists():
         print(f"Error: auth file not found at {AUTH_FILE}", file=sys.stderr)
@@ -56,7 +56,7 @@ def get_config() -> dict:
 
     try:
         _check_file_permissions(AUTH_FILE)
-        with open(AUTH_FILE, "rb") as f:
+        with AUTH_FILE.open("rb") as f:
             return tomllib.load(f)
     except PermissionError as e:
         print(f"Error: cannot read auth file: {e}", file=sys.stderr)
@@ -66,7 +66,7 @@ def get_config() -> dict:
         sys.exit(1)
 
 
-def get_auth_cookies(config: dict) -> tuple[str, str, str | None]:
+def get_auth_cookies(config: dict[str, Any]) -> tuple[str, str, str | None]:
     """Extract uid, pass, and optional cf_clearance cookie values from config."""
     try:
         auth = config["auth"]

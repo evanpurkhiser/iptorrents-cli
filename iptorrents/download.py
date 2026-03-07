@@ -1,11 +1,9 @@
 """Download .torrent files from IPTorrents."""
 
-from __future__ import annotations
-
 import re
 import sys
 from pathlib import Path
-from typing import IO
+from typing import BinaryIO
 from urllib.parse import unquote
 
 import requests
@@ -67,7 +65,7 @@ def download_torrent(
     filename = _resolve_filename(r, download_url, filename)
 
     out_path = dest_dir / filename
-    with open(out_path, "wb") as f:
+    with out_path.open("wb") as f:
         for chunk in r.iter_content(chunk_size=8192):
             f.write(chunk)
 
@@ -77,7 +75,7 @@ def download_torrent(
 def stream_torrent(
     session: requests.Session,
     download_url: str,
-    dest: IO[bytes],
+    dest: BinaryIO,
 ) -> None:
     """Stream raw .torrent bytes directly to *dest* (e.g. sys.stdout.buffer).
 

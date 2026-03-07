@@ -1,10 +1,8 @@
 """Fetch and parse individual torrent detail pages from IPTorrents."""
 
-from __future__ import annotations
-
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +11,7 @@ from .session import BASE_URL
 from .utils import parse_int
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class TorrentInfo:
     id: int
     name: str
@@ -22,13 +20,13 @@ class TorrentInfo:
     uploader: str
     seeders: int
     leechers: int
-    genre: list[str]
+    file_count: int
+    genre: tuple[str, ...]
     plot: str
-    actors: list[str]
+    actors: tuple[str, ...]
     imdb_url: str
     tmdb_url: str
     download_url: str
-    file_count: int
 
     def __str__(self) -> str:
         lines = [
@@ -74,7 +72,7 @@ def _parse_detail(html: str, torrent_id: int) -> TorrentInfo:
     name = ""
     title_tag = soup.find("title")
     if title_tag:
-        # "The Office US S05E18 New Boss 1080p HEVC x265-MeGusta - IPTorrents - #1 Private Tracker"
+        # "Blade Runner 2049 - IPTorrents - #1 Private Tracker"
         name = title_tag.get_text(strip=True).split(" - IPTorrents")[0].strip()
 
     # --- stats table (table[1]): seeders, leechers, size, uploader, upload date ---
@@ -121,20 +119,21 @@ def _parse_detail(html: str, torrent_id: int) -> TorrentInfo:
             label = cells[0].get_text(strip=True).lower()
             value_cell = cells[1]
 
-            if label == "genre":
-                genre = [a.get_text(strip=True) for a in value_cell.find_all("a")]
-            elif label == "plot":
-                plot = value_cell.get_text(strip=True)
-            elif label == "actors":
-                actors = [a.get_text(strip=True) for a in value_cell.find_all("a")]
-            else:
-                # External links row (IMDb, TMDB)
-                for a in value_cell.find_all("a", href=True):
-                    href = a["href"]
-                    if "imdb.com" in href:
-                        imdb_url = href
-                    elif "themoviedb.org" in href:
-                        tmdb_url = href
+            match label:
+                case "genre":
+                    genre = [a.get_text(strip=True) for a in value_cell.find_all("a")]
+                case "plot":
+                    plot = value_cell.get_text(strip=True)
+                case "actors":
+                    actors = [a.get_text(strip=True) for a in value_cell.find_all("a")]
+                case _:
+                    # External links row (IMDb, TMDB)
+                    for a in value_cell.find_all("a", href=True):
+                        href = a["href"]
+                        if "imdb.com" in href:
+                            imdb_url = href
+                        elif "themoviedb.org" in href:
+                            tmdb_url = href
 
     # --- download URL ---
     dl_link = soup.find("a", href=re.compile(r"download\.php"))
@@ -152,11 +151,11 @@ def _parse_detail(html: str, torrent_id: int) -> TorrentInfo:
         uploader=uploader,
         seeders=seeders,
         leechers=leechers,
-        genre=genre,
+        file_count=file_count,
+        genre=tuple(genre),
         plot=plot,
-        actors=actors,
+        actors=tuple(actors),
         imdb_url=imdb_url,
         tmdb_url=tmdb_url,
         download_url=dl_url,
-        file_count=file_count,
     )
