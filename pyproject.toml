@@ -5,12 +5,33 @@ description = "CLI for searching and downloading torrents from IPTorrents"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
+authors = [
+    {name = "Evan Purkhiser", email = "evanpurkhiser@gmail.com"}
+]
+keywords = ["iptorrents", "torrent", "cli", "search"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet",
+    "Topic :: Utilities",
+]
 dependencies = [
     "beautifulsoup4>=4.14.3",
     "lxml>=6.0.2",
     "requests>=2.32.5",
     "toon-format",
 ]
+
+[project.urls]
+Homepage = "https://github.com/evanpurkhiser/iptorrents-cli"
+Repository = "https://github.com/evanpurkhiser/iptorrents-cli"
+Issues = "https://github.com/evanpurkhiser/iptorrents-cli/issues"
 
 [project.scripts]
 ipt = "iptorrents.cli:main"
