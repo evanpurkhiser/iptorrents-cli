@@ -36,10 +36,6 @@ ipt auth "uid=123456; pass=abc123...; cf_clearance=xyz..."
 
 Credentials are saved to `~/.local/state/iptorrents-cli/auth.toml` with `chmod 600`.
 
-### Refreshing
-
-`cf_clearance` expires after ~30 min of inactivity. Re-run `ipt auth` when requests start failing.
-
 ---
 
 ## Commands
