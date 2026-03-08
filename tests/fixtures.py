@@ -11,7 +11,7 @@ SEARCH_HTML = """\
     <th>Cat</th><th>Name</th><th>Bkm</th><th>DL</th>
     <th>Cmt</th><th>Size</th><th>Snatches</th><th>Seeders</th><th>Leechers</th>
   </tr>
-  <!-- movie row -->
+  <!-- movie row — NOT freeleech -->
   <tr>
     <td><img alt="Movie/HD" /></td>
     <td>
@@ -26,7 +26,7 @@ SEARCH_HTML = """\
     <td>987</td>
     <td>12</td>
   </tr>
-  <!-- software / linux iso row -->
+  <!-- software / linux iso row — NOT freeleech -->
   <tr>
     <td><img alt="PC/0day" /></td>
     <td>
@@ -40,6 +40,22 @@ SEARCH_HTML = """\
     <td>9,999</td>
     <td>503</td>
     <td>78</td>
+  </tr>
+  <!-- TV row — freeleech via <b class="fl"> tag -->
+  <tr>
+    <td><img alt="TV/HD" /></td>
+    <td>
+      <a href="/t/555777">The Bear S03E05 1080p WEB-DL x264</a>
+      <b class="fl">FreeLeech</b>
+      <span>2 hours ago</span>
+    </td>
+    <td></td>
+    <td><a href="download.php/555777/The.Bear.S03E05.torrent">DL</a></td>
+    <td>3</td>
+    <td>3.2 GB</td>
+    <td>456</td>
+    <td>1200</td>
+    <td>55</td>
   </tr>
 </table>
 </body></html>

@@ -157,6 +157,7 @@ def cmd_search(args: argparse.Namespace, use_json: bool) -> None:
                 "leechers": t.leechers,
                 "downloads": t.downloads,
                 "added": t.added,
+                "freeleech": t.freeleech,
                 "download_url": t.download_url,
             }
             for t in results
@@ -191,14 +192,16 @@ def cmd_info(args: argparse.Namespace, use_json: bool) -> None:
 
 def cmd_download(args: argparse.Namespace, use_json: bool) -> None:
     session = get_session()
-    info = fetch_info(session, args.id)
 
     if args.stdout:
-        # Stream raw bytes to stdout — caller can pipe directly:
-        #   ipt download --stdout 12345 | transmission-cli -
-        stream_torrent(session, info.download_url, sys.stdout.buffer)
+        # Stream raw bytes to stdout — only torrent bytes must reach stdout.
+        # Skip fetch_info entirely; construct the download URL directly from the ID
+        # so nothing else can accidentally pollute stdout.
+        dl_url = f"https://iptorrents.com/download.php/{args.id}/{args.id}.torrent"
+        stream_torrent(session, dl_url, sys.stdout.buffer)
         return
 
+    info = fetch_info(session, args.id)
     dest = Path(args.output) if args.output else Path.cwd()
     out_path = download_torrent(session, info.download_url, dest_dir=dest)
     _output({"path": str(out_path), "id": args.id}, use_json)

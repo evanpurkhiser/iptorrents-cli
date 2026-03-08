@@ -7,9 +7,9 @@ from .fixtures import SEARCH_HTML, SEARCH_HTML_EMPTY
 
 
 class TestParseResults:
-    def test_returns_both_rows(self):
+    def test_returns_all_rows(self):
         results = _parse_results(SEARCH_HTML, limit=25)
-        assert len(results) == 2
+        assert len(results) == 3
 
     def test_movie_row_fields(self):
         results = _parse_results(SEARCH_HTML, limit=25)
@@ -55,6 +55,67 @@ class TestParseResults:
         html = "<html><body><p>nothing here</p></body></html>"
         results = _parse_results(html, limit=25)
         assert results == []
+
+    # --- freeleech ---
+
+    def test_non_freeleech_rows_are_false(self):
+        results = _parse_results(SEARCH_HTML, limit=25)
+        assert results[0].freeleech is False  # Blade Runner
+        assert results[1].freeleech is False  # Ubuntu
+
+    def test_freeleech_detected_via_fl_class(self):
+        results = _parse_results(SEARCH_HTML, limit=25)
+        tv = results[2]  # The Bear — has <b class="fl">
+        assert tv.freeleech is True
+        assert tv.id == 555777
+
+    def test_freeleech_via_text(self):
+        """A <span> with text 'FreeLeech' should also be detected."""
+        html = """\
+<!DOCTYPE html><html><body>
+<table id="torrents">
+  <tr><th>Cat</th><th>Name</th><th>Bkm</th><th>DL</th>
+      <th>Cmt</th><th>Size</th><th>Snatches</th><th>Seeders</th><th>Leechers</th></tr>
+  <tr>
+    <td><img alt="Movie/HD" /></td>
+    <td>
+      <a href="/t/999">Some Movie 1080p</a>
+      <span>Free Leech</span>
+      <span>1 day ago</span>
+    </td>
+    <td></td>
+    <td><a href="download.php/999/Some.Movie.torrent">DL</a></td>
+    <td>0</td><td>8 GB</td><td>100</td><td>50</td><td>5</td>
+  </tr>
+</table>
+</body></html>"""
+        results = _parse_results(html, limit=25)
+        assert len(results) == 1
+        assert results[0].freeleech is True
+
+    def test_freeleech_via_freeleech_class(self):
+        """A tag with class containing 'freeleech' should be detected."""
+        html = """\
+<!DOCTYPE html><html><body>
+<table id="torrents">
+  <tr><th>Cat</th><th>Name</th><th>Bkm</th><th>DL</th>
+      <th>Cmt</th><th>Size</th><th>Snatches</th><th>Seeders</th><th>Leechers</th></tr>
+  <tr>
+    <td><img alt="TV/HD" /></td>
+    <td>
+      <a href="/t/888">Show S01E01 720p</a>
+      <span class="freeleech">FL</span>
+      <span>5 hours ago</span>
+    </td>
+    <td></td>
+    <td><a href="download.php/888/Show.torrent">DL</a></td>
+    <td>0</td><td>2 GB</td><td>20</td><td>300</td><td>10</td>
+  </tr>
+</table>
+</body></html>"""
+        results = _parse_results(html, limit=25)
+        assert len(results) == 1
+        assert results[0].freeleech is True
 
 
 class TestParseInt:

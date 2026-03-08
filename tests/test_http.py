@@ -43,7 +43,7 @@ class TestSearch:
     def test_returns_results(self, session):
         rsps_lib.add(rsps_lib.GET, f"{BASE_URL}/t", body=SEARCH_HTML, status=200)
         results = search(session, "blade runner")
-        assert len(results) == 2
+        assert len(results) == 3
 
     @rsps_lib.activate
     def test_movie_result_fields(self, session):

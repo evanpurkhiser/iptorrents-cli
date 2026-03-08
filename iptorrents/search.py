@@ -34,10 +34,12 @@ class Torrent:
     downloads: int
     added: str
     download_url: str
+    freeleech: bool = False
 
     def __str__(self) -> str:
+        fl = " [FL]" if self.freeleech else ""
         return (
-            f"[{self.id}] {self.name}\n"
+            f"[{self.id}] {self.name}{fl}\n"
             f"  Category : {self.category}\n"
             f"  Size     : {self.size}  |  "
             f"Seeders: {self.seeders}  Leechers: {self.leechers}  Downloads: {self.downloads}\n"
@@ -126,6 +128,17 @@ def _parse_results(html: str, limit: int) -> list[Torrent]:
             age_match = re.search(r"(\d+ \w+ ago)", cols[1].get_text(" ", strip=True))
             added = age_match.group(1) if age_match else ""
 
+            # Freeleech: IPTorrents marks FL torrents with a tag in the name cell.
+            # Matches <b class="fl">, <span class="freeleech">, or any element whose
+            # text is "FreeLeech" / "Free Leech" (case-insensitive).
+            fl_tag = cols[1].find(
+                lambda tag: (
+                    any("fl" in c.lower() or "freeleech" in c.lower() for c in tag.get("class", []))
+                    or re.search(r"free\s*leech", tag.get_text(), re.IGNORECASE) is not None
+                )
+            )
+            freeleech = fl_tag is not None
+
             dl_link = cols[3].find("a", href=re.compile(r"download\.php"))
             if dl_link:
                 href = dl_link["href"]
@@ -149,6 +162,7 @@ def _parse_results(html: str, limit: int) -> list[Torrent]:
                     downloads=downloads,
                     added=added,
                     download_url=dl_url,
+                    freeleech=freeleech,
                 )
             )
         except (IndexError, KeyError, TypeError, AttributeError):
