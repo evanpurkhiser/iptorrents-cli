@@ -10,7 +10,16 @@ Designed for agent/LLM use — output defaults to [TOON format](https://github.c
 ## Installation
 
 ```sh
-git clone https://github.com/youruser/iptorrents-cli
+# Install from PyPI
+uv tool install iptorrents-cli
+
+# Or run directly without installing
+uvx --from iptorrents-cli ipt search "ubuntu"
+```
+
+**From source:**
+```sh
+git clone https://github.com/evanpurkhiser/iptorrents-cli
 cd iptorrents-cli
 uv tool install .
 ```
