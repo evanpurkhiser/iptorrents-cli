@@ -3,6 +3,8 @@
 A focused CLI for searching and downloading torrents from [IPTorrents](https://iptorrents.com).
 Designed for agent/LLM use — output defaults to [TOON format](https://github.com/toon-format/toon-python) (token-efficient), with `--json` as an override.
 
+**Example LLM skill:** See [iptorrents skill](https://github.com/evanpurkhiser/dots-personal/blob/master/machines/server/opencode/skills/iptorrents/SKILL.md) for a complete workflow that searches IPTorrents and adds results to Transmission.
+
 ---
 
 ## Installation
