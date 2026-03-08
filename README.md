@@ -126,9 +126,9 @@ ipt download --stdout 111222 | transmission-remote --add -
 Compact tabular notation — minimal tokens, great for LLM consumption:
 
 ```
-[id name category size seeders leechers downloads added download_url]
-[111222 "Blade Runner 2049 2017 2160p UHD BluRay x265" "Movie/HD" "55.3 GB" 987 12 1234 "3 days ago" "https://iptorrents.com/download.php/111222/..."]
-[333444 "Ubuntu 24.04 LTS Desktop amd64" "PC/0day" "5.68 GB" 503 78 9999 "1 week ago" "https://iptorrents.com/download.php/333444/..."]
+[2]{id,name,category,size,seeders,leechers,downloads,added,freeleech,download_url}:
+  7249322,Blade Runner 2049 2017 Hybrid 1080p UHD BluRay x265,Movie/x265,16.7 GB,23,0,62,1 days ago,true,"https://iptorrents.com/download.php/7249322/..."
+  7206952,Ubuntu 24.04 LTS Desktop amd64,PC/0day,5.68 GB,503,78,9999,8 weeks ago,false,"https://iptorrents.com/download.php/7206952/..."
 ```
 
 ### JSON
