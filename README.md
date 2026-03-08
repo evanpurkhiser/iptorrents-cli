@@ -21,13 +21,12 @@ IPTorrents uses Cloudflare Turnstile — automated login is impossible. Auth is 
 
 ### 1. Extract cookies
 
-Open [iptorrents.com](https://iptorrents.com), log in, open DevTools (F12) → Console, paste this one-liner:
+Open [iptorrents.com](https://iptorrents.com), log in, open DevTools (F12) → Application/Storage → Cookies, and copy the values for:
+- `uid`
+- `pass`
+- `cf_clearance` (Cloudflare token)
 
-```js
-(async()=>{const r=["uid","pass"],o=["cf_clearance"],j=Object.fromEntries(document.cookie.split("; ").map(c=>{const i=c.indexOf("=");return[c.slice(0,i),c.slice(i+1)]})),m=r.filter(k=>!j[k]);if(m.length){console.error(`[ipt] Missing cookies: ${m.join(", ")} — are you logged in?`);return;}const s=[...r,...o].filter(k=>j[k]).map(k=>`${k}=${j[k]}`).join("; ");try{await navigator.clipboard.writeText(s);console.log("[ipt] Copied! Now run:");console.log(`  ipt auth "${s}"`);}catch{console.log("[ipt] Copy this:");console.log(s);}})();
-```
-
-It extracts `uid`, `pass`, and `cf_clearance`, prints the `ipt auth` command to run, and copies it to your clipboard.
+Format them as: `uid=VALUE; pass=VALUE; cf_clearance=VALUE`
 
 ### 2. Save credentials
 
