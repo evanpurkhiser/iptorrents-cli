@@ -1,5 +1,7 @@
 # iptorrents-cli
 
+[![Build Status](https://github.com/evanpurkhiser/iptorrents-cli/workflows/Tests/badge.svg)](https://github.com/evanpurkhiser/iptorrents-cli/actions?query=workflow%3ATests)
+
 > [!NOTE]
 > This project is written completely using Claude. No review of the code has been done.
 
