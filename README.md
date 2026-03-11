@@ -1,5 +1,8 @@
 # iptorrents-cli
 
+> [!NOTE]
+> This project is written completely using Claude. No review of the code has been done.
+
 A focused CLI for searching and downloading torrents from [IPTorrents](https://iptorrents.com).
 Designed for agent/LLM use — output defaults to [TOON format](https://github.com/toon-format/toon-python) (token-efficient), with `--json` as an override.
 
