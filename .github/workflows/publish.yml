@@ -1,4 +1,4 @@
-name: Publish to PyPI
+name: Publish crate
 
 on:
   push:
@@ -8,18 +8,18 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-      
-      - name: Set up Python
-        run: uv python install 3.12
-      
-      - name: Build package
-        run: uv build
-      
-      - name: Publish to PyPI
-        run: uv publish --token ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo artifacts
+        uses: Swatinem/rust-cache@v2
+
+      - name: Verify tests pass
+        run: cargo test --all-targets --all-features
+
+      - name: Publish to crates.io
+        run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}

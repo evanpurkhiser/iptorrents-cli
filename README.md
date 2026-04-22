@@ -1,81 +1,59 @@
 # iptorrents-cli
 
-[![Build Status](https://github.com/evanpurkhiser/iptorrents-cli/workflows/Tests/badge.svg)](https://github.com/evanpurkhiser/iptorrents-cli/actions?query=workflow%3ATests)
+A focused Rust CLI for searching and downloading torrents from [IPTorrents](https://iptorrents.com).
 
-> [!NOTE]
-> This project is written completely using Claude. No review of the code has been done.
-
-A focused CLI for searching and downloading torrents from [IPTorrents](https://iptorrents.com).
-Designed for agent/LLM use — output defaults to [TOON format](https://github.com/toon-format/toon-python) (token-efficient), with `--json` as an override.
-
-**Example LLM skill:** See [iptorrents skill](https://github.com/evanpurkhiser/dots-personal/blob/master/machines/server/opencode/skills/iptorrents/SKILL.md) for a complete workflow that searches IPTorrents and adds results to Transmission.
-
----
+Output defaults to TOON (token-efficient). Use `--json` for pretty JSON.
 
 ## Installation
 
 ```sh
-# Install from PyPI
-uv tool install iptorrents-cli
-
-# Or run directly without installing
-uvx --from iptorrents-cli ipt search "ubuntu"
-```
-
-**From source:**
-```sh
+# From source
 git clone https://github.com/evanpurkhiser/iptorrents-cli
 cd iptorrents-cli
-uv tool install .
-```
+cargo install --path .
 
----
+# Or run directly in the repo
+cargo run -- search "ubuntu"
+```
 
 ## Authentication
 
-IPTorrents uses Cloudflare Turnstile — automated login is impossible. Auth is done via browser cookies.
+IPTorrents uses Cloudflare Turnstile. Automated login is not supported.
+Use browser cookies from an authenticated session.
 
-### 1. Extract cookies
-
-Open [iptorrents.com](https://iptorrents.com), log in, open DevTools (F12) → Application/Storage → Cookies, and copy the values for:
-- `uid`
-- `pass`
-- `cf_clearance` (Cloudflare token)
-
-Format them as: `uid=VALUE; pass=VALUE; cf_clearance=VALUE`
-
-### 2. Save credentials
+1. Open <https://iptorrents.com> in your browser.
+2. Copy cookie values for:
+   - `uid`
+   - `pass`
+   - `cf_clearance` (usually required)
+3. Save them:
 
 ```sh
 ipt auth "uid=123456; pass=abc123...; cf_clearance=xyz..."
 ```
 
-Credentials are saved to `~/.local/state/iptorrents-cli/auth.toml` with `chmod 600`.
+Credentials are stored at:
 
----
+- `~/.local/state/iptorrents-cli/auth.toml`
+- state dir permissions: `700`
+- auth file permissions: `600`
 
 ## Commands
 
-```
+```sh
 ipt [--json] COMMAND ...
 ```
 
-`--json` switches all output to pretty-printed JSON. Default is TOON.
-
----
-
 ### `ipt auth`
 
-Save browser cookies for authentication.
+Save browser cookies.
 
 ```sh
 ipt auth "uid=123456; pass=abc...; cf_clearance=xyz..."
 
-# Read from stdin:
+# Or read from stdin
 echo "uid=123456; pass=abc..." | ipt auth -
 ```
-
----
 
 ### `ipt search` (`ipt s`)
 
@@ -84,100 +62,73 @@ Search for torrents.
 ```sh
 ipt search "blade runner 2049"
 ipt s "ubuntu 24.04" --sort seeders --limit 10
-ipt search "pink floyd" --json
+ipt --json search "pink floyd"
 ```
 
-| Flag | Default | Description |
-|---|---|---|
-| `-s / --sort FIELD` | age | `seeders` `leechers` `size` `downloads` `name` `age` |
-| `-n / --limit N` | 25 | Max results |
+Flags:
 
-Output fields: `id`, `name`, `category`, `size`, `seeders`, `leechers`, `downloads`, `added`, `download_url`
+- `-s, --sort` one of: `seeders`, `leechers`, `size`, `downloads`, `name`, `age`
+- `-n, --limit` max results (default: `25`)
 
----
+Output fields:
+
+- `id`, `name`, `category`, `size`, `seeders`, `leechers`, `downloads`, `added`, `freeleech`, `download_url`
 
 ### `ipt info` (`ipt i`)
 
-Show full details for a torrent by ID.
+Show details for a torrent by ID.
 
 ```sh
 ipt info 111222
-ipt i 111222 --json
+ipt --json i 111222
 ```
 
-Output fields: `id`, `name`, `size`, `file_count`, `uploaded`, `uploader`, `seeders`, `leechers`, `genre`, `plot`, `actors`, `imdb_url`, `tmdb_url`, `download_url`
+Output fields:
 
-Movie/TV torrents include `genre`, `plot`, `actors`, `imdb_url`, `tmdb_url`. Other categories leave these empty.
-
----
+- `id`, `name`, `size`, `file_count`, `uploaded`, `uploader`, `seeders`, `leechers`
+- `genre`, `plot`, `actors`, `imdb_url`, `tmdb_url`, `download_url`
 
 ### `ipt download` (`ipt d`)
 
 Download a `.torrent` file by ID.
 
 ```sh
-# Save to current directory:
+# Save in current directory
 ipt download 111222
 
-# Save to a specific directory:
+# Save in a specific directory
 ipt d 111222 --output ~/Downloads
 
-# Stream raw bytes to stdout — pipe directly to transmission-cli:
+# Stream raw bytes to stdout
 ipt download --stdout 111222 | transmission-remote --add -
 ```
 
-| Flag | Description |
-|---|---|
-| `-o / --output DIR` | Directory to save `.torrent` (default: cwd) |
-| `--stdout` | Write raw bytes to stdout, suppress all other output |
+Flags:
 
----
+- `-o, --output DIR` output directory (default: current directory)
+- `--stdout` stream raw bytes to stdout instead of saving to disk
 
 ## Output formats
 
 ### TOON (default)
 
-Compact tabular notation — minimal tokens, great for LLM consumption:
-
-```
-[2]{id,name,category,size,seeders,leechers,downloads,added,freeleech,download_url}:
-  7249322,Blade Runner 2049 2017 Hybrid 1080p UHD BluRay x265,Movie/x265,16.7 GB,23,0,62,1 days ago,true,"https://iptorrents.com/download.php/7249322/..."
-  7206952,Ubuntu 24.04 LTS Desktop amd64,PC/0day,5.68 GB,503,78,9999,8 weeks ago,false,"https://iptorrents.com/download.php/7206952/..."
-```
+Compact token-efficient format via `serde_toon`.
 
 ### JSON
 
 ```sh
-ipt search "hevc remux" --json | jq '.[].seeders'
+ipt --json search "hevc remux" | jq '.[].seeders'
 ```
-
----
-
-## Auth file
-
-`~/.local/state/iptorrents-cli/auth.toml` (created by `ipt auth`, `chmod 600`):
-
-```toml
-[auth]
-uid = "123456"
-pass = "abc123def456..."
-cf_clearance = "xyz..."   # optional but usually needed
-```
-
----
 
 ## Development
 
 ```sh
-uv sync
-uv run pytest tests/ -v
-uv run ruff check iptorrents/
+cargo fmt
+cargo test
 ```
-
----
 
 ## Security
 
-- Cookies grant full account access. The auth file is stored `600`, the directory `700`.
+- Cookies grant full account access.
 - Never commit `~/.local/state/iptorrents-cli/auth.toml`.
-- Enabling `requests` debug logging will print cookie values to stderr.
+- Be careful with debug logs that may expose cookie values.
