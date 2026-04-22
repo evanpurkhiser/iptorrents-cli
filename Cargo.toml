@@ -2,8 +2,13 @@
 name = "iptorrents-cli"
 version = "0.1.0"
 edition = "2024"
-license = "MIT"
 description = "CLI for searching and downloading torrents from IPTorrents"
+license = "MIT"
+repository = "https://github.com/evanpurkhiser/iptorrents-cli"
+homepage = "https://github.com/evanpurkhiser/iptorrents-cli"
+readme = "README.md"
+keywords = ["cli", "torrent", "iptorrents"]
+categories = ["command-line-utilities"]
 
 [[bin]]
 name = "ipt"
