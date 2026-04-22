@@ -1,15 +1,15 @@
 use std::collections::HashMap;
 use std::fs;
 use std::io::{self, Read};
-use std::os::unix::fs::PermissionsExt;
 use std::path::PathBuf;
 
 use cookie::Cookie;
 use serde::Serialize;
-use xdg::BaseDirectories;
 
 use crate::error::{Error, Result};
 use crate::models::{AuthConfig, AuthFile};
+
+const APP_NAME: &str = "iptorrents-cli";
 
 #[derive(Debug, Serialize)]
 struct AuthWrite<'a> {
@@ -24,15 +24,14 @@ struct AuthWriteSection<'a> {
     cf_clearance: &'a Option<String>,
 }
 
+fn state_home() -> PathBuf {
+    dirs::state_dir()
+        .or_else(dirs::data_local_dir)
+        .unwrap_or_else(|| PathBuf::from("."))
+}
+
 pub fn auth_file_path() -> Result<PathBuf> {
-    let xdg = BaseDirectories::with_prefix("iptorrents-cli");
-
-    if let Some(existing) = xdg.find_state_file("auth.toml") {
-        return Ok(existing);
-    }
-
-    xdg.place_state_file("auth.toml")
-        .map_err(|e| Error::XdgStatePath(e.to_string()))
+    Ok(state_home().join(APP_NAME).join("auth.toml"))
 }
 
 fn state_dir_path() -> Result<PathBuf> {
@@ -45,7 +44,11 @@ fn state_dir_path() -> Result<PathBuf> {
 fn ensure_state_dir_permissions() -> Result<()> {
     let dir = state_dir_path()?;
     fs::create_dir_all(&dir)?;
-    fs::set_permissions(&dir, fs::Permissions::from_mode(0o700))?;
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o700))?;
+    }
     Ok(())
 }
 
@@ -55,14 +58,18 @@ pub fn read_auth_config() -> Result<AuthConfig> {
         return Err(Error::MissingAuthFile(path));
     }
 
-    let meta = fs::metadata(&path)?;
-    let mode = meta.permissions().mode() & 0o777;
-    if mode & 0o077 != 0 {
-        eprintln!(
-            "Warning: {} has permissions {:o} - run `chmod 600` to restrict access to your cookies.",
-            path.display(),
-            mode
-        );
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let meta = fs::metadata(&path)?;
+        let mode = meta.permissions().mode() & 0o777;
+        if mode & 0o077 != 0 {
+            eprintln!(
+                "Warning: {} has permissions {:o} - run `chmod 600` to restrict access to your cookies.",
+                path.display(),
+                mode
+            );
+        }
     }
 
     let raw = fs::read_to_string(&path)?;
@@ -91,7 +98,11 @@ pub fn write_auth_file(auth: &AuthConfig) -> Result<PathBuf> {
     };
     let contents = toml::to_string(&doc)?;
     fs::write(&path, contents)?;
-    fs::set_permissions(&path, fs::Permissions::from_mode(0o600))?;
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o600))?;
+    }
     Ok(path)
 }
 

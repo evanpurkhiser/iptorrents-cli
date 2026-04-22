@@ -27,9 +27,6 @@ pub enum Error {
     #[error("IPTorrents session is invalid or expired")]
     InvalidSession,
 
-    #[error("could not prepare XDG state path: {0}")]
-    XdgStatePath(String),
-
     #[error("could not determine parent directory for auth file")]
     MissingAuthParentDir,
 
