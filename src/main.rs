@@ -6,9 +6,9 @@ use iptorrents_cli::cli::{Cli, Commands};
 use iptorrents_cli::config::{self, read_auth_config, write_auth_file};
 use iptorrents_cli::download::{download_torrent, stream_torrent};
 use iptorrents_cli::error::Result;
-use iptorrents_cli::http::{self, verify_session, IptClient};
+use iptorrents_cli::http::{self, IptClient, verify_session};
 use iptorrents_cli::info::fetch_info;
-use iptorrents_cli::output::{emit, OutputFormat};
+use iptorrents_cli::output::{OutputFormat, emit};
 use iptorrents_cli::search::search;
 
 fn authed_client() -> Result<IptClient> {

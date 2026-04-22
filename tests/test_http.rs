@@ -5,7 +5,7 @@ use std::io::Cursor;
 use httpmock::Method::GET;
 use httpmock::MockServer;
 use iptorrents_cli::download::{download_torrent, stream_torrent};
-use iptorrents_cli::http::{verify_session, IptClient};
+use iptorrents_cli::http::{IptClient, verify_session};
 use iptorrents_cli::info::fetch_info;
 use iptorrents_cli::models::AuthConfig;
 use iptorrents_cli::search::search;

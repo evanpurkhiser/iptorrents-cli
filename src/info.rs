@@ -130,10 +130,10 @@ fn is_metadata_table(table: &ElementRef<'_>) -> bool {
         }
 
         for a in cells[1].select(&LINK_SEL) {
-            if let Some(href) = a.value().attr("href") {
-                if href.contains("imdb.com") || href.contains("themoviedb.org") {
-                    return true;
-                }
+            if let Some(href) = a.value().attr("href")
+                && (href.contains("imdb.com") || href.contains("themoviedb.org"))
+            {
+                return true;
             }
         }
     }
@@ -311,8 +311,9 @@ mod tests {
             "https://iptorrents.com",
         )
         .unwrap_err();
-        assert!(err
-            .to_string()
-            .contains("could not parse torrent details page"));
+        assert!(
+            err.to_string()
+                .contains("could not parse torrent details page")
+        );
     }
 }
