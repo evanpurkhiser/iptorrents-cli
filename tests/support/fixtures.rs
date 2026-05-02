@@ -140,3 +140,50 @@ pub const INFO_HTML_MUSIC: &str = r#"<!DOCTYPE html><html><head>
 </table>
 <a href="download.php/555666/Pink.Floyd.Wall.torrent">Download</a>
 </body></html>"#;
+
+pub const PEERS_HTML: &str = r#"<!DOCTYPE html><html><body>
+<table class=t1>
+  <tr>
+    <th>Torrent</th><th>User</th><th>%</th><th>Uploaded</th><th>Rate</th>
+    <th>Downloaded</th><th>Rate</th><th>Seeding Time</th><th>User Agent</th><th>IP Address</th>
+  </tr>
+  <tr><td colspan=99 class=ac>Seeders</td></tr>
+  <tr>
+    <td><a href="?t=6788723">28 Years Later 2025 HDR 2160p WEB h265-ETHEL</a></td>
+    <td><a href="?u=1283939"></a></td>
+    <td>100%</td>
+    <td class=ar>329 MB (16.1 GB)</td>
+    <td class=ar>5.3 MB/s</td>
+    <td class=ar>0 B (11.8 GB)</td>
+    <td class=ar>0 B/s</td>
+    <td class=ar>7.7 months</td>
+    <td>Transmission/4.1.1</td>
+    <td><a href="?ipa=74.64.39.221">74.64.39.221</a></td>
+  </tr>
+  <tr>
+    <td><a href="?t=886881">A Beautiful Mind 2001 1080p BluRay x264-KaKa</a></td>
+    <td><a href="?u=1283939"></a></td>
+    <td>100%</td>
+    <td class=ar>0 B (18.4 GB)</td>
+    <td class=ar>0 B/s</td>
+    <td class=ar>0 B (10.9 GB)</td>
+    <td class=ar>0 B/s</td>
+    <td class=ar>8.1 months</td>
+    <td>Transmission/4.1.1</td>
+    <td><a href="?ipa=74.64.39.221">74.64.39.221</a></td>
+  </tr>
+  <tr><td colspan=99 class=ac>Leechers</td></tr>
+  <tr>
+    <td><a href="?t=7200316">A Beautiful Mind 2001 UHD BluRay 2160p DDP Atmo...</a></td>
+    <td><a href="?u=1283939"></a></td>
+    <td>54%</td>
+    <td class=ar>3.93 GB (7.38 GB)</td>
+    <td class=ar>120 KB/s</td>
+    <td class=ar>0 B (18 GB)</td>
+    <td class=ar>1.2 MB/s</td>
+    <td class=ar>3.1 weeks</td>
+    <td>Transmission/4.1.1</td>
+    <td><a href="?ipa=74.64.39.221">74.64.39.221</a></td>
+  </tr>
+</table>
+</body></html>"#;

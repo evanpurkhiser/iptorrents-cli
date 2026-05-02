@@ -1,3 +1,4 @@
+pub mod active;
 pub mod cli;
 pub mod config;
 pub mod download;

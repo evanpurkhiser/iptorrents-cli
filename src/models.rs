@@ -44,3 +44,25 @@ pub struct TorrentInfo {
     pub tmdb_url: String,
     pub download_url: String,
 }
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct ActiveTorrent {
+    #[serde(rename = "torrent")]
+    pub name: String,
+    #[serde(rename = "torrent_id")]
+    pub id: i64,
+    pub percent: String,
+    pub uploaded: String,
+    pub upload_rate: String,
+    pub downloaded: String,
+    pub download_rate: String,
+    pub seeding_time: String,
+    pub user_agent: String,
+    pub ip_address: String,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct ActiveTorrents {
+    pub seeding: Vec<ActiveTorrent>,
+    pub leeching: Vec<ActiveTorrent>,
+}

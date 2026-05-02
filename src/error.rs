@@ -36,6 +36,9 @@ pub enum Error {
     #[error("unexpected search page layout")]
     UnexpectedSearchLayout,
 
+    #[error("unexpected active peers page layout")]
+    UnexpectedPeersLayout,
+
     #[error("could not parse torrent details page (unexpected HTML layout)")]
     UnexpectedDetailLayout,
 

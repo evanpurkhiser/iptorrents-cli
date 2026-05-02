@@ -4,6 +4,7 @@ use std::io::Cursor;
 
 use httpmock::Method::GET;
 use httpmock::MockServer;
+use iptorrents_cli::active::active;
 use iptorrents_cli::download::{download_torrent, stream_torrent};
 use iptorrents_cli::http::{IptClient, verify_session};
 use iptorrents_cli::info::fetch_info;
@@ -11,7 +12,7 @@ use iptorrents_cli::models::AuthConfig;
 use iptorrents_cli::search::search;
 use tempfile::tempdir;
 
-use crate::support::fixtures::{INFO_HTML_MOVIE, SEARCH_HTML, SEARCH_HTML_LOGGED_OUT};
+use crate::support::fixtures::{INFO_HTML_MOVIE, PEERS_HTML, SEARCH_HTML, SEARCH_HTML_LOGGED_OUT};
 
 const FAKE_TORRENT_BYTES: &[u8] = b"d8:announce35:http://tracker.example.com/announcee";
 
@@ -164,4 +165,20 @@ fn download_torrent_saves_file() {
         Some("custom-name.torrent")
     );
     assert_eq!(std::fs::read(out).expect("read output"), FAKE_TORRENT_BYTES);
+}
+
+#[test]
+fn active_returns_seeding_and_leeching() {
+    let server = MockServer::start();
+
+    let _m = server.mock(|when, then| {
+        when.method(GET).path("/peers");
+        then.status(200).body(PEERS_HTML);
+    });
+
+    let client = test_client(server.base_url());
+    let results = active(&client).expect("active should succeed");
+
+    assert_eq!(results.seeding.len(), 2);
+    assert_eq!(results.leeching.len(), 1);
 }

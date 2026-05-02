@@ -69,4 +69,7 @@ pub enum Commands {
         )]
         stdout: bool,
     },
+
+    #[command(alias = "a", about = "Show active seeding and leeching torrents.")]
+    Active,
 }

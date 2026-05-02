@@ -108,6 +108,23 @@ Flags:
 - `-o, --output DIR` output directory (default: current directory)
 - `--stdout` stream raw bytes to stdout instead of saving to disk
 
+### `ipt active` (`ipt a`)
+
+Show your currently active torrents from the peers page, grouped by seeding and
+leeching.
+
+```sh
+ipt active
+ipt --json active
+```
+
+Output shape:
+
+- top-level keys: `seeding`, `leeching`
+- each key contains a list of objects with:
+  `torrent`, `torrent_id`, `percent`, `uploaded`, `upload_rate`, `downloaded`,
+  `download_rate`, `seeding_time`, `user_agent`, `ip_address`
+
 ## Output formats
 
 ### TOON (default)

@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 
+use iptorrents_cli::active::active;
 use iptorrents_cli::cli::{Cli, Commands};
 use iptorrents_cli::config::{self, read_auth_config, write_auth_file};
 use iptorrents_cli::download::{download_torrent, stream_torrent};
@@ -71,6 +72,11 @@ fn run() -> Result<()> {
                 }),
                 format,
             )?;
+        }
+        Commands::Active => {
+            let client = authed_client()?;
+            let results = active(&client)?;
+            emit(&results, format)?;
         }
     }
 
