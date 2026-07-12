@@ -1,5 +1,3 @@
-# Shared lint and formatting palette for pure-Rust projects.
-
 [[repos]]
 repo = "https://github.com/pre-commit/pre-commit-hooks"
 rev = "v6.0.0"
@@ -11,6 +9,9 @@ hooks = [
   { id = "check-added-large-files", priority = 100 },
   { id = "check-executables-have-shebangs", priority = 100 },
   { id = "check-case-conflict", priority = 100 },
+  { id = "check-symlinks", priority = 100 },
+  { id = "detect-private-key", priority = 100 },
+  { id = "check-json", priority = 100 },
   { id = "check-toml", priority = 100 },
   { id = "check-yaml", priority = 100 },
 ]
@@ -26,8 +27,9 @@ rev = "v1.7.12"
 hooks = [{ id = "actionlint-system", priority = 11 }]
 
 [[repos]]
-repo = "local"
+repo = "https://github.com/evanpurkhiser/prek-personal"
+rev = "v1.0.2"
 hooks = [
-  { id = "rustfmt", name = "rustfmt", entry = "cargo fmt --all --", language = "system", files = '(^|/)(rustfmt\.toml|.+\.rs)$', pass_filenames = false, priority = 10 },
-  { id = "clippy", name = "clippy", entry = "cargo clippy --all-targets -- -D warnings", language = "system", files = '(^|/)(Cargo\.toml|Cargo\.lock|rustfmt\.toml|.+\.rs)$', pass_filenames = false, priority = 11 },
+  { id = "rustfmt-system", priority = 10 },
+  { id = "clippy-system", priority = 11 },
 ]
