@@ -1,0 +1,33 @@
+# Shared lint and formatting palette for pure-Rust projects.
+
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+hooks = [
+  { id = "trailing-whitespace", priority = 0 },
+  { id = "end-of-file-fixer", priority = 1 },
+  { id = "mixed-line-ending", priority = 2 },
+  { id = "check-merge-conflict", priority = 100 },
+  { id = "check-added-large-files", priority = 100 },
+  { id = "check-executables-have-shebangs", priority = 100 },
+  { id = "check-case-conflict", priority = 100 },
+  { id = "check-toml", priority = 100 },
+  { id = "check-yaml", priority = 100 },
+]
+
+[[repos]]
+repo = "https://github.com/crate-ci/typos"
+rev = "v1.48.0"
+hooks = [{ id = "typos", args = ["--force-exclude"], priority = 100 }]
+
+[[repos]]
+repo = "https://github.com/rhysd/actionlint"
+rev = "v1.7.12"
+hooks = [{ id = "actionlint-system", priority = 11 }]
+
+[[repos]]
+repo = "local"
+hooks = [
+  { id = "rustfmt", name = "rustfmt", entry = "cargo fmt --all --", language = "system", files = '(^|/)(rustfmt\.toml|.+\.rs)$', pass_filenames = false, priority = 10 },
+  { id = "clippy", name = "clippy", entry = "cargo clippy --all-targets -- -D warnings", language = "system", files = '(^|/)(Cargo\.toml|Cargo\.lock|rustfmt\.toml|.+\.rs)$', pass_filenames = false, priority = 11 },
+]
