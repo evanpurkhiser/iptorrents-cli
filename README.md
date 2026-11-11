@@ -1,8 +1,10 @@
 # iptorrents-cli
 
-A focused Rust CLI for searching and downloading torrents from [IPTorrents](https://iptorrents.com).
+A focused Rust CLI for searching
+and downloading torrents from [IPTorrents](https://iptorrents.com).
 
-Output defaults to TOON (token-efficient). Use `--json` for pretty JSON.
+Output defaults to TOON (token-efficient).
+Use `--json` for pretty JSON.
 
 ## Installation
 
@@ -18,7 +20,8 @@ cargo run -- search "ubuntu"
 
 ## Authentication
 
-IPTorrents uses Cloudflare Turnstile. Automated login is not supported.
+IPTorrents uses Cloudflare Turnstile.
+Automated login is not supported.
 Use browser cookies from an authenticated session.
 
 1. Open <https://iptorrents.com> in your browser.
@@ -72,7 +75,8 @@ Flags:
 
 Output fields:
 
-- `id`, `name`, `category`, `size`, `seeders`, `leechers`, `downloads`, `added`, `freeleech`, `download_url`
+- `id`, `name`, `category`, `size`, `seeders`, `leechers`, `downloads`, `added`,
+  `freeleech`, `download_url`
 
 ### `ipt info` (`ipt i`)
 
@@ -85,7 +89,8 @@ ipt --json i 111222
 
 Output fields:
 
-- `id`, `name`, `size`, `file_count`, `uploaded`, `uploader`, `seeders`, `leechers`
+- `id`, `name`, `size`, `file_count`, `uploaded`, `uploader`, `seeders`,
+  `leechers`
 - `genre`, `plot`, `actors`, `imdb_url`, `tmdb_url`, `download_url`
 
 ### `ipt download` (`ipt d`)
@@ -110,8 +115,8 @@ Flags:
 
 ### `ipt active` (`ipt a`)
 
-Show your currently active torrents from the peers page, grouped by seeding and
-leeching.
+Show your currently active torrents from the peers page,
+grouped by seeding and leeching.
 
 ```sh
 ipt active
@@ -121,9 +126,9 @@ ipt --json active
 Output shape:
 
 - top-level keys: `seeding`, `leeching`
-- each key contains a list of objects with:
-  `torrent`, `torrent_id`, `percent`, `uploaded`, `upload_rate`, `downloaded`,
-  `download_rate`, `seeding_time`, `user_agent`, `ip_address`
+- each key contains a list of objects with: `torrent`, `torrent_id`, `percent`,
+  `uploaded`, `upload_rate`, `downloaded`, `download_rate`, `seeding_time`,
+  `user_agent`, `ip_address`
 
 ## Output formats
 
