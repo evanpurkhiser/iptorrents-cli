@@ -5,8 +5,8 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/bump.yml':
         - 'actions/checkout@v6.0.3'
-        - 'dtolnay/rust-toolchain@stable'
         - 'evanpurkhiser/workflows@main'
+        - 'jdx/mise-action@v4.2.0'
         - 'swatinem/rust-cache@v2.9.3'
     '.github/workflows/lint.yml':
         - 'actions/checkout@v6.0.3'
@@ -15,7 +15,7 @@ workflows:
         - 'actions/checkout@v6.0.3'
         - 'actions/download-artifact@v4.3.0'
         - 'actions/upload-artifact@v4.6.2'
-        - 'dtolnay/rust-toolchain@stable'
+        - 'jdx/mise-action@v4.2.0'
         - 'rust-lang/crates-io-auth-action@v1.0.5'
         - 'softprops/action-gh-release@v2.6.2'
         - 'swatinem/rust-cache@v2.9.3'
@@ -35,11 +35,6 @@ dependencies:
         commit: 'sha1-ea165f8d65b6e75b540449e92b4886f43607fa02'
         owner_id: 44036562
         repo_id: 192625955
-    'dtolnay/rust-toolchain@stable':
-        ref: 'stable'
-        commit: 'sha1-b725eda525362e7cf34af9a7243cac1e3f01a7ec'
-        owner_id: 1940490
-        repo_id: 260749683
     'evanpurkhiser/workflows@main':
         ref: 'main'
         commit: 'sha1-f019c5f6ad0107bc2accbeda0ff8fce510d807e3'
