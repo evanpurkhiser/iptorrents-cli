@@ -26,10 +26,11 @@ Use browser cookies from an authenticated session.
 
 1. Open <https://iptorrents.com> in your browser.
 2. Copy cookie values for:
+3. on home page; right click, inspect or inspect element, network, click on the one that says iptorrents.me (might have a lock next too it, usually at the top), under request cookies you will find the values
    - `uid`
    - `pass`
    - `cf_clearance` (usually required)
-3. Save them:
+4. Save them:
 
 ```sh
 ipt auth "uid=123456; pass=abc123...; cf_clearance=xyz..."
